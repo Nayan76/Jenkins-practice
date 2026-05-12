@@ -19,6 +19,7 @@ public class PostUserTest {
                 "}";
 
         Response response = given()
+                .relaxedHTTPSValidation()
                 .header("Content-Type", "application/json")
                 .header("x-api-key", "reqres-free-v1") // <--- Add this line
                 .body(requestBody)
