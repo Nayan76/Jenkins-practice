@@ -5,7 +5,6 @@ import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
 
 public class PostUserTest {
 
@@ -13,24 +12,28 @@ public class PostUserTest {
     public void createUserTest() {
         // 1. Define the Base URI
         RestAssured.baseURI = "https://reqres.in/api";
+
+        // 2. Define Request Body
         String requestBody = "{\n" +
                 "    \"name\": \"morpheus\",\n" +
                 "    \"job\": \"leader\"\n" +
                 "}";
 
+        // 3. Send POST Request
         Response response = given()
-                .relaxedHTTPSValidation()
+                .relaxedHTTPSValidation() // Bypasses SSL certificate checks
                 .header("Content-Type", "application/json")
-                .header("x-api-key", "reqres-free-v1") // <--- Add this line
+                .queryParam("api_key", "reqres-free-v1") // Passes API key as parameter
                 .body(requestBody)
                 .when()
                 .post("/users")
                 .then()
                 .extract().response();
 
+        // 4. Verify Status Code (201 Created)
         Assert.assertEquals(response.statusCode(), 201, "Status code is not 201");
 
-        // 5. Verify Response Body Values
+        // 5. Verify Response Body
         String name = response.jsonPath().getString("name");
         String job = response.jsonPath().getString("job");
 
