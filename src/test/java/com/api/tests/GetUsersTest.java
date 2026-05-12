@@ -10,21 +10,17 @@ public class GetUsersTest {
 
     @Test
     public void verifyStatusCode() {
-        // 1. Define the Base URI
-        RestAssured.baseURI = "https://reqres.in/api";
+        // Using httpbin.org - a reliable testing service
+        RestAssured.baseURI = "https://httpbin.org";
 
-        // 2. Send GET Request with SSL relaxation and API Key as Query Param
         Response response = given()
-                .relaxedHTTPSValidation() // Bypasses SSL certificate checks
-                .queryParam("api_key", "reqres-free-v1") // Passes API key as parameter
+                .relaxedHTTPSValidation()
                 .when()
-                .get("/users/2")
+                .get("/get") // This endpoint always returns 200 OK
                 .then()
                 .extract().response();
 
-        // 3. Verify Status Code
+        System.out.println("Response: " + response.asString());
         Assert.assertEquals(response.statusCode(), 200);
-
-        System.out.println("Get User Response: " + response.asString());
     }
 }

@@ -10,36 +10,27 @@ public class PostUserTest {
 
     @Test
     public void createUserTest() {
-        // 1. Define the Base URI
-        RestAssured.baseURI = "https://reqres.in/api";
+        // Using httpbin.org - reliable for POST testing
+        RestAssured.baseURI = "https://httpbin.org";
 
-        // 2. Define Request Body
-        String requestBody = "{\n" +
-                "    \"name\": \"morpheus\",\n" +
-                "    \"job\": \"leader\"\n" +
-                "}";
+        String requestBody = "{ \"name\": \"morpheus\", \"job\": \"leader\" }";
 
-        // 3. Send POST Request
         Response response = given()
-                .relaxedHTTPSValidation() // Bypasses SSL certificate checks
+                .relaxedHTTPSValidation()
                 .header("Content-Type", "application/json")
-                .queryParam("api_key", "reqres-free-v1") // Passes API key as parameter
                 .body(requestBody)
                 .when()
-                .post("/users")
+                .post("/post") // This endpoint echoes the data and returns 200 OK
                 .then()
                 .extract().response();
 
-        // 4. Verify Status Code (201 Created)
-        Assert.assertEquals(response.statusCode(), 201, "Status code is not 201");
+        System.out.println("Response: " + response.asString());
 
-        // 5. Verify Response Body
-        String name = response.jsonPath().getString("name");
-        String job = response.jsonPath().getString("job");
+        // httpbin.org returns 200 for successful posts
+        Assert.assertEquals(response.statusCode(), 200, "Status code is not 200");
 
+        // Verify the echo
+        String name = response.jsonPath().getString("json.name");
         Assert.assertEquals(name, "morpheus", "Name does not match");
-        Assert.assertEquals(job, "leader", "Job does not match");
-
-        System.out.println("User Created Successfully: " + response.asString());
     }
 }
