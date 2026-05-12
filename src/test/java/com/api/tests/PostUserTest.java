@@ -13,24 +13,20 @@ public class PostUserTest {
     public void createUserTest() {
         // 1. Define the Base URI
         RestAssured.baseURI = "https://reqres.in/api";
-
-        // 2. Define the Request Body (JSON payload)
         String requestBody = "{\n" +
                 "    \"name\": \"morpheus\",\n" +
                 "    \"job\": \"leader\"\n" +
                 "}";
 
-        // 3. Send the POST request and capture the response
         Response response = given()
-                .header("Content-Type", "application/json") // Set Content-Type header
-                .relaxedHTTPSValidation()
-                .body(requestBody)                         // Attach the body
+                .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres-free-v1") // <--- Add this line
+                .body(requestBody)
                 .when()
-                .post("/users")                            // Endpoint
+                .post("/users")
                 .then()
                 .extract().response();
 
-        // 4. Verify Status Code (201 Created)
         Assert.assertEquals(response.statusCode(), 201, "Status code is not 201");
 
         // 5. Verify Response Body Values
