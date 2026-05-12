@@ -23,6 +23,7 @@ public class PostUserTest {
         // 3. Send the POST request and capture the response
         Response response = given()
                 .header("Content-Type", "application/json") // Set Content-Type header
+                .relaxedHTTPSValidation()
                 .body(requestBody)                         // Attach the body
                 .when()
                 .post("/users")                            // Endpoint
